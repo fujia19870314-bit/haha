@@ -33,7 +33,10 @@ const emotionColors: Record<string, string> = {
   '内疚': '#7A7A7A',
   '思念': '#8B7B8B',
   '平静': '#5A8B6A',
-  '混乱': '#B89B5C'
+  '混乱': '#B89B5C',
+  '温暖': '#D4A574',
+  '焦虑': '#C9A959',
+  '麻木': '#9B8B9B'
 }
 
 const emotionLabels: Record<string, string> = {
@@ -42,7 +45,10 @@ const emotionLabels: Record<string, string> = {
   '内疚': '疚',
   '思念': '念',
   '平静': '静',
-  '混乱': '乱'
+  '混乱': '乱',
+  '温暖': '暖',
+  '焦虑': '焦',
+  '麻木': '木'
 }
 
 const calendarTitle = computed(() => {

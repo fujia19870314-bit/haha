@@ -15,7 +15,10 @@ const moodTags: MoodTag[] = [
   { name: '内疚', color: '#7A7A7A', bgColor: '#F0F0F0', borderColor: '#D0D0D0' },
   { name: '思念', color: '#8B7B8B', bgColor: '#F0ECF0', borderColor: '#D8D0D8' },
   { name: '平静', color: '#5A8B6A', bgColor: '#E8F0EC', borderColor: '#B8D8C8' },
-  { name: '混乱', color: '#B89B5C', bgColor: '#F8F0E0', borderColor: '#E8D8B0' }
+  { name: '混乱', color: '#B89B5C', bgColor: '#F8F0E0', borderColor: '#E8D8B0' },
+  { name: '温暖', color: '#D4A574', bgColor: '#F8F0E8', borderColor: '#E8D8C0' },
+  { name: '焦虑', color: '#C9A959', bgColor: '#F8F4E0', borderColor: '#E8DCB0' },
+  { name: '麻木', color: '#9B8B9B', bgColor: '#F0ECF0', borderColor: '#D8D0D8' }
 ]
 
 const selectedMood = ref('')

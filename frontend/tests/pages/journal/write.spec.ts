@@ -12,12 +12,12 @@ describe('pages/journal/write.vue', () => {
   it('应显示情绪标签选择器', () => {
     const wrapper = mount(WritePage)
     expect(wrapper.find('[data-testid="mood-selector"]').exists()).toBe(true)
-    expect(wrapper.findAll('[data-testid^="mood-tag-"]').length).toBe(6)
+    expect(wrapper.findAll('[data-testid^="mood-tag-"]').length).toBe(9)
   })
 
-  it('6种情绪标签应正确显示', () => {
+  it('9种情绪标签应正确显示', () => {
     const wrapper = mount(WritePage)
-    const moods = ['悲伤', '愤怒', '内疚', '思念', '平静', '混乱']
+    const moods = ['悲伤', '愤怒', '内疚', '思念', '平静', '混乱', '温暖', '焦虑', '麻木']
     moods.forEach(mood => {
       expect(wrapper.text()).toContain(mood)
     })

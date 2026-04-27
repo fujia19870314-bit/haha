@@ -99,6 +99,8 @@ const DIARY_RESPONSE_PROMPT = `
 `.trim();
 
 // 危机检测专用提示词
+// 注意：当前 MVP 实现使用关键词匹配 + 语义评分（见 crisis-detector.ts）
+// 此提示词为未来接入 LLM-based 危机检测预留
 const CRISIS_DETECTION_PROMPT = `
 你是一个专业的危机内容检测器。请分析以下文本，判断是否包含自我伤害或自杀倾向。
 
@@ -127,11 +129,12 @@ const EMOTION_ANALYSIS_PROMPT = `
 - 悲伤 (sadness)
 - 思念 (longing)
 - 愤怒 (anger)
-- 愧疚 (guilt)
+- 内疚 (guilt)
 - 平静 (peace)
 - 温暖 (warmth)
 - 焦虑 (anxiety)
 - 麻木 (numbness)
+- 混乱 (confusion)
 
 请只返回情绪标签的英文代码。
 `.trim();

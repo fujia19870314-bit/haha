@@ -10,6 +10,7 @@ import { QwenProvider } from '../lib/qwen-provider';
 export interface SubmitJournalRequest {
   userId: string;
   content: string;
+  mood?: string;
 }
 
 export interface JournalResponse {
@@ -92,7 +93,7 @@ export class SubmitJournalHandler {
         userId: request.userId,
         encryptedContent,
         aiResponse: aiResponse.content,
-        emotionTag: '', // 可以从 AI 回复中提取或后续分析
+        emotionTag: request.mood || ''
         crisisDetected: crisisResult.hasCrisis,
         crisisRiskLevel: crisisResult.riskLevel
       });
