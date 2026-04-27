@@ -1,0 +1,89 @@
+@import './tokens.css';
+
+/* 全局基础样式 */
+page {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 通用容器 */
+.container {
+  padding: var(--space-md);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* 安全区适配 */
+.safe-area-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 文本工具类 */
+.text-serif {
+  font-family: var(--font-serif);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+  color: var(--color-text-tertiary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* 按钮基础 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: 500;
+  transition: all var(--duration-fast) var(--ease-out);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+}
+
+.btn-primary:active {
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+/* 卡片 */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 分割线 */
+.divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--space-md) 0;
+}

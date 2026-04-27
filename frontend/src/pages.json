@@ -1,0 +1,119 @@
+{
+  "pages": [
+    {
+      "path": "pages/onboarding/index",
+      "style": {
+        "navigationBarTitleText": "开始",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "今日",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/journal/write",
+      "style": {
+        "navigationBarTitleText": "写日记",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/journal/result",
+      "style": {
+        "navigationBarTitleText": "回应",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/crisis/help",
+      "style": {
+        "navigationBarTitleText": "危机帮助",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/payment/index",
+      "style": {
+        "navigationBarTitleText": "订阅",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/history/index",
+      "style": {
+        "navigationBarTitleText": "历史",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/calendar/index",
+      "style": {
+        "navigationBarTitleText": "日历",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/export/index",
+      "style": {
+        "navigationBarTitleText": "导出",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/resources/index",
+      "style": {
+        "navigationBarTitleText": "资源",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#F8F6F3",
+    "backgroundColor": "#F8F6F3"
+  },
+  "tabBar": {
+    "color": "#9E9A93",
+    "selectedColor": "#5A6B5C",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "今日",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/journal/write",
+        "text": "书写",
+        "iconPath": "static/tabbar/write.png",
+        "selectedIconPath": "static/tabbar/write-active.png"
+      },
+      {
+        "pagePath": "pages/history/index",
+        "text": "回顾",
+        "iconPath": "static/tabbar/history.png",
+        "selectedIconPath": "static/tabbar/history-active.png"
+      },
+      {
+        "pagePath": "pages/settings/index",
+        "text": "更多",
+        "iconPath": "static/tabbar/more.png",
+        "selectedIconPath": "static/tabbar/more-active.png"
+      }
+    ]
+  },
+  "condition": {}
+}
