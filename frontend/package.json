@@ -1,0 +1,28 @@
+{
+  "name": "mourning-diary-frontend",
+  "version": "1.0.0",
+  "description": "AI 哀伤引导日记 - 前端 (uni-app Vue 3)",
+  "scripts": {
+    "dev:mp-weixin": "uni",
+    "build:mp-weixin": "uni build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-alpha-5000820260420001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-alpha-5000820260420001",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "^3.4.0",
+    "@dcloudio/vite-plugin-uni": "3.0.0-alpha-5000820260420001",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "jsdom": "^24.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
