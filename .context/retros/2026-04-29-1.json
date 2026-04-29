@@ -1,0 +1,48 @@
+{
+  "date": "2026-04-29",
+  "window": "7d",
+  "metrics": {
+    "commits": 17,
+    "contributors": 1,
+    "prs_merged": 0,
+    "insertions": 9326,
+    "deletions": 9,
+    "net_loc": 9317,
+    "test_loc": 3141,
+    "test_ratio": 0.34,
+    "active_days": 1,
+    "sessions": 1,
+    "deep_sessions": 0,
+    "avg_session_minutes": 41,
+    "loc_per_session_hour": 13650,
+    "feat_pct": 0.53,
+    "fix_pct": 0.06,
+    "peak_hour": 16,
+    "ai_assisted_commits": 0
+  },
+  "authors": {
+    "Developer": {
+      "commits": 17,
+      "insertions": 9326,
+      "deletions": 9,
+      "test_ratio": 0.34,
+      "top_area": "frontend/"
+    }
+  },
+  "version_range": ["0.1.0.0", "0.1.0.0"],
+  "streak_days": 0,
+  "tweetable": "Week of Apr 27: 17 commits (solo), 9.3k LOC, 34% tests, 0 PRs, peak: 4pm | Streak: 0d",
+  "test_health": {
+    "total_test_files": 108,
+    "tests_added_this_period": 27,
+    "regression_test_commits": 0,
+    "test_files_changed": 27
+  },
+  "backlog": {
+    "total_open": 22,
+    "p0_p1": 8,
+    "p2": 6,
+    "completed_this_period": 7,
+    "added_this_period": 0
+  }
+}

@@ -26,7 +26,7 @@
   },
   "quickapp": {},
   "mp-weixin": {
-    "appid": "wx MourningDiaryTest",
+    "appid": "touristappid",
     "usingComponents": true,
     "permission": {
       "scope.userLocation": {
@@ -34,7 +34,18 @@
       }
     },
     "requiredBackgroundModes": [],
-    "lazyCodeLoading": "requiredComponents"
+    "lazyCodeLoading": "requiredComponents",
+    "optimization": {
+      "subPackages": true
+    },
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "enhance": true,
+      "postcss": true,
+      "minified": true,
+      "bigPackageSizeSupport": true
+    }
   },
   "mp-alipay": {},
   "mp-baidu": {},

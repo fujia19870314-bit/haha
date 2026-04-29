@@ -1,0 +1,789 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>mourning-diary 新设计预览</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+:root {
+  --color-bg: #181C1A;
+  --color-bg-gradient-start: #1E2420;
+  --color-bg-gradient-end: #131714;
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-surface-elevated: rgba(255, 255, 255, 0.08);
+  --color-surface-warm: rgba(201, 168, 124, 0.06);
+  --color-text-primary: #F2EDE8;
+  --color-text-secondary: #A8A29E;
+  --color-text-tertiary: #78716C;
+  --color-text-muted: #57534E;
+  --color-primary: #C9A87C;
+  --color-primary-light: rgba(201, 168, 124, 0.15);
+  --color-primary-soft: rgba(201, 168, 124, 0.08);
+  --color-primary-dark: #B08E60;
+  --color-crisis: #C4786E;
+  --color-crisis-light: rgba(196, 120, 110, 0.15);
+  --color-crisis-soft: rgba(196, 120, 110, 0.06);
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-gold: rgba(201, 168, 124, 0.2);
+  --font-serif: 'Noto Serif SC', serif;
+}
+
+body {
+  background: #0D0F0E;
+  display: flex;
+  gap: 24px;
+  padding: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.phone {
+  width: 375px;
+  height: 812px;
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg, var(--color-bg-gradient-start) 0%, var(--color-bg) 40%, var(--color-bg-gradient-end) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.phone-inner {
+  padding: 0 16px 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* 状态栏 */
+.status-bar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* 导航栏 */
+.nav-bar {
+  background: linear-gradient(180deg, var(--color-bg) 0%, rgba(24, 28, 26, 0.95) 100%);
+  border-bottom: 1px solid var(--color-border);
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-serif);
+  letter-spacing: 0.5px;
+}
+
+.crisis-btn {
+  background: linear-gradient(135deg, var(--color-crisis-soft) 0%, var(--color-crisis-light) 100%);
+  border-radius: 999px;
+  padding: 5px 14px;
+  border: 1px solid var(--color-crisis-light);
+}
+.crisis-btn span { font-size: 11px; color: var(--color-crisis); font-weight: 500; }
+
+/* 危机横幅 */
+.crisis-banner {
+  background: linear-gradient(135deg, var(--color-crisis-soft) 0%, rgba(196, 120, 110, 0.03) 100%);
+  border-radius: 24px;
+  padding: 20px;
+  margin: 16px 0;
+  border: 1px solid rgba(196, 120, 110, 0.12);
+  box-shadow: 0 4px 16px rgba(196, 120, 110, 0.06);
+}
+
+/* 纪念文字 */
+.memorial-nudge {
+  margin: 24px 0 20px;
+  padding: 20px 0;
+}
+
+.memorial-text {
+  font-size: 26px;
+  font-family: var(--font-serif);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+}
+
+/* 玻璃卡片 */
+.prompt-card {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 32px rgba(201, 168, 124, 0.06);
+  backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.prompt-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 30%; right: 30%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,124,0.15), transparent);
+}
+
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.prompt-label {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.prompt-theme {
+  font-size: 11px;
+  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary-soft) 0%, rgba(201, 168, 124, 0.04) 100%);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-gold);
+}
+
+.prompt-text {
+  font-size: 20px;
+  font-family: var(--font-serif);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.prompt-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border-gold), transparent);
+  margin-bottom: 16px;
+}
+
+.write-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.write-cta-text {
+  font-size: 15px;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.write-cta-arrow {
+  font-size: 20px;
+  color: var(--color-primary);
+}
+
+/* 订阅链接 */
+.subscription-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
+  border-radius: 24px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.subscription-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.subscription-arrow {
+  font-size: 20px;
+  color: var(--color-primary);
+}
+
+/* 情绪标签 */
+.emotion-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.emotion-tag {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(255,255,255,0.02) 100%);
+  color: var(--color-text-secondary);
+}
+
+.emotion-tag.selected {
+  background: linear-gradient(135deg, var(--color-primary-soft) 0%, var(--color-primary-light) 100%);
+  color: var(--color-primary);
+  border-color: var(--color-border-gold);
+  box-shadow: 0 0 12px rgba(201, 168, 124, 0.12);
+}
+
+/* 文本域 */
+.journal-textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  font-family: var(--font-serif);
+  outline: none;
+  resize: none;
+  margin: 16px 0;
+}
+
+.journal-textarea::placeholder {
+  color: var(--color-text-muted);
+  font-family: sans-serif;
+}
+
+/* 渐变按钮 */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-bg);
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 4px 16px rgba(201, 168, 124, 0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* 危机卡片 */
+.crisis-alert {
+  background: linear-gradient(135deg, var(--color-crisis-soft) 0%, rgba(196, 120, 110, 0.03) 100%);
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(196, 120, 110, 0.15);
+  box-shadow: 0 4px 16px rgba(196, 120, 110, 0.06);
+}
+
+.crisis-title { font-size: 20px; font-weight: 600; color: var(--color-crisis); display: block; margin-bottom: 8px; }
+.crisis-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; display: block; margin-bottom: 16px; }
+
+/* 结果卡片 */
+.response-card {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 32px rgba(201, 168, 124, 0.04);
+  backdrop-filter: blur(20px);
+}
+
+.response-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.response-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--color-bg);
+  box-shadow: 0 2px 8px rgba(201, 168, 124, 0.2);
+}
+
+.response-title { font-size: 15px; font-weight: 600; color: var(--color-text-primary); letter-spacing: 0.3px; }
+.response-content { font-size: 15px; color: var(--color-text-secondary); line-height: 1.7; font-family: var(--font-serif); }
+
+/* 设置项 */
+.settings-section {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
+  border-radius: 24px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+  border-bottom: 1px solid var(--color-border);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.setting-item:last-child { border-bottom: none; }
+
+.setting-label {
+  font-size: 15px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.setting-sublabel {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  display: block;
+  margin-top: 2px;
+}
+
+.setting-value {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* 切换开关 */
+.toggle-btn {
+  width: 48px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--color-border);
+  position: relative;
+  transition: all 0.25s;
+}
+
+.toggle-btn.active {
+  background: var(--color-primary);
+  box-shadow: 0 0 12px rgba(201, 168, 124, 0.3);
+}
+
+.toggle-knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff 0%, #f0ece8 100%);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: all 0.25s;
+}
+
+.toggle-btn.active .toggle-knob { left: 24px; }
+
+/* 定价卡片 */
+.pricing-card {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 32px rgba(201, 168, 124, 0.04);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; right: -30%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(201,168,124,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.pricing-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+  font-family: var(--font-serif);
+}
+
+.pricing-subtitle { font-size: 13px; color: var(--color-text-secondary); }
+
+.price-amount {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 16px 0 8px;
+}
+
+.price-unit { font-size: 13px; color: var(--color-text-tertiary); }
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.benefit-icon { font-size: 13px; color: var(--color-primary); }
+.benefit-text { font-size: 13px; color: var(--color-text-secondary); }
+
+/* 日历 */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
+  border-radius: 24px;
+  padding: 16px 12px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.week-day {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  padding: 8px 0;
+  font-weight: 500;
+}
+
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  border-radius: 12px;
+  position: relative;
+}
+
+.day-number { font-size: 13px; color: var(--color-text-primary); }
+
+.day-cell.today .day-number { color: var(--color-primary); font-weight: 600; }
+.day-cell.other-month .day-number { color: var(--color-text-tertiary); }
+
+.emotion-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 2px;
+  box-shadow: 0 0 4px rgba(255,255,255,0.1);
+}
+
+/* 标签标题 */
+.page-label {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* 呼吸光晕动画 */
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 20px rgba(201, 168, 124, 0.08); }
+  50% { box-shadow: 0 0 32px rgba(201, 168, 124, 0.18); }
+}
+
+.breathe-glow {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* 微光动画 */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 首页 ===== -->
+<div class="phone" style="position:relative;">
+  <div class="page-label">首页 (home/index.vue)</div>
+  <div class="phone-inner">
+    <div class="status-bar">9:41</div>
+    <div class="nav-bar">
+      <div style="width:60px;"></div>
+      <span class="nav-title">今日</span>
+      <div class="crisis-btn"><span>帮助</span></div>
+    </div>
+
+    <div class="crisis-banner">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;color:var(--color-text-secondary);">如果你感到难以承受，这里有人可以帮助你</span>
+        <span style="font-size:12px;color:var(--color-crisis);font-weight:500;">我需要帮助</span>
+      </div>
+    </div>
+
+    <div class="memorial-nudge">
+      <span class="memorial-text">你与故人的故事，<br>已经延续了 127 天</span>
+    </div>
+
+    <div class="prompt-card breathe-glow">
+      <div class="prompt-header">
+        <span class="prompt-label">今日引导</span>
+        <span class="prompt-theme">回忆</span>
+      </div>
+      <span class="prompt-text">今天过得怎么样？想写什么都可以。那些没说出口的话，在这里是安全的。</span>
+      <div class="prompt-divider"></div>
+      <div class="write-cta">
+        <span class="write-cta-text">开始书写</span>
+        <span class="write-cta-arrow">&rarr;</span>
+      </div>
+    </div>
+
+    <div class="subscription-link">
+      <span class="subscription-text">解锁完整体验</span>
+      <span class="subscription-arrow">&rsaquo;</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 日记写作 ===== -->
+<div class="phone" style="position:relative;">
+  <div class="page-label">日记书写 (journal/write.vue)</div>
+  <div class="phone-inner">
+    <div class="status-bar">9:41</div>
+    <div class="nav-bar">
+      <span style="font-size:13px;color:var(--color-text-secondary);min-width:60px;">返回</span>
+      <span class="nav-title">书写日记</span>
+      <div style="width:60px;"></div>
+    </div>
+
+    <div style="padding:16px 0;">
+      <span style="font-size:13px;color:var(--color-text-secondary);display:block;margin-bottom:12px;">今天你的感受是?</span>
+      <div class="emotion-grid">
+        <div class="emotion-tag selected">思念</div>
+        <div class="emotion-tag">悲伤</div>
+        <div class="emotion-tag">平静</div>
+        <div class="emotion-tag">温暖</div>
+        <div class="emotion-tag">愤怒</div>
+        <div class="emotion-tag">内疚</div>
+        <div class="emotion-tag">混乱</div>
+        <div class="emotion-tag">麻木</div>
+      </div>
+
+      <textarea class="journal-textarea" placeholder="在这里写下你想说的话..."></textarea>
+
+      <button class="submit-btn">提交日记</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 日记结果 ===== -->
+<div class="phone" style="position:relative;">
+  <div class="page-label">AI 回应 (journal/result.vue)</div>
+  <div class="phone-inner">
+    <div class="status-bar">9:41</div>
+    <div class="nav-bar">
+      <span style="font-size:13px;color:var(--color-text-secondary);min-width:60px;">返回</span>
+      <span class="nav-title">AI 回应</span>
+      <div style="width:60px;"></div>
+    </div>
+
+    <div style="padding:16px 0;">
+      <div class="response-card">
+        <div class="response-header">
+          <div class="response-avatar">&#9998;</div>
+          <span class="response-title">AI 的回信</span>
+        </div>
+        <span class="response-content">
+          我理解你现在的感受。失去至亲的痛苦是无法用言语来形容的。但请相信，时间会慢慢抚平伤痛...
+        </span>
+      </div>
+
+      <div style="display:flex;gap:12px;">
+        <button class="submit-btn" style="flex:1;">继续书写</button>
+        <button class="submit-btn" style="flex:1;background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border);">返回首页</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 设置页 ===== -->
+<div class="phone" style="position:relative;">
+  <div class="page-label">设置 (settings/index.vue)</div>
+  <div class="phone-inner">
+    <div class="status-bar">9:41</div>
+    <div class="nav-bar">
+      <span style="font-size:13px;color:var(--color-text-secondary);min-width:60px;">返回</span>
+      <span class="nav-title">设置</span>
+      <div style="width:60px;"></div>
+    </div>
+
+    <div style="padding:16px 0;">
+      <div class="settings-section">
+        <div class="section-title">日记</div>
+        <div class="setting-item">
+          <span class="setting-label">日记提醒</span>
+          <div class="toggle-btn active"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">隐私保护</span>
+          <span class="setting-value">已开启</span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="section-title">声音</div>
+        <div class="setting-item">
+          <div>
+            <span class="setting-label">白噪音</span>
+            <span class="setting-sublabel">雨声</span>
+          </div>
+          <div class="toggle-btn"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 定价页 ===== -->
+<div class="phone" style="position:relative;">
+  <div class="page-label">订阅 (payment/index.vue)</div>
+  <div class="phone-inner">
+    <div class="status-bar">9:41</div>
+    <div class="nav-bar">
+      <span style="font-size:13px;color:var(--color-text-secondary);min-width:60px;">返回</span>
+      <span class="nav-title">解锁完整版</span>
+      <div style="width:60px;"></div>
+    </div>
+
+    <div style="padding:16px 0;">
+      <div class="pricing-card">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:500;color:var(--color-primary);background:linear-gradient(135deg, var(--color-primary-soft) 0%, var(--color-primary-light) 100%);padding:4px 10px;border-radius:999px;border:1px solid var(--color-border-gold);">推荐</span>
+        </div>
+        <div class="pricing-title">年度会员</div>
+        <div class="pricing-subtitle">享受完整的治愈旅程</div>
+        <div class="price-amount">
+          &yen;198<span style="font-size:15px;font-weight:400;color:var(--color-text-tertiary);">/年</span>
+        </div>
+        <div style="margin:16px 0;border-top:1px solid var(--color-border);padding-top:16px;">
+          <div class="benefit-item"><span class="benefit-icon">&#10003;</span><span class="benefit-text">无限次日记书写</span></div>
+          <div class="benefit-item"><span class="benefit-icon">&#10003;</span><span class="benefit-text">AI 深度回应</span></div>
+          <div class="benefit-item"><span class="benefit-icon">&#10003;</span><span class="benefit-text">导出纪念册</span></div>
+        </div>
+        <button class="submit-btn">立即订阅</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 日历页 ===== -->
+<div class="phone" style="position:relative;">
+  <div class="page-label">日历 (calendar/index.vue)</div>
+  <div class="phone-inner">
+    <div class="status-bar">9:41</div>
+    <div class="nav-bar">
+      <span style="font-size:13px;color:var(--color-text-secondary);min-width:60px;">返回</span>
+      <span class="nav-title">情绪日历</span>
+      <div style="width:60px;"></div>
+    </div>
+
+    <div style="padding:16px 0;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:16px;">
+        <span style="font-size:18px;color:var(--color-text-secondary);">&lsaquo;</span>
+        <span style="font-size:18px;font-weight:600;color:var(--color-text-primary);font-family:var(--font-serif);">2026年 四月</span>
+        <span style="font-size:18px;color:var(--color-text-secondary);">&rsaquo;</span>
+      </div>
+
+      <div class="calendar-grid">
+        <div class="week-day">日</div><div class="week-day">一</div><div class="week-day">二</div><div class="week-day">三</div><div class="week-day">四</div><div class="week-day">五</div><div class="week-day">六</div>
+        <div class="day-cell other-month"><span class="day-number">29</span></div>
+        <div class="day-cell other-month"><span class="day-number">30</span></div>
+        <div class="day-cell other-month"><span class="day-number">31</span></div>
+        <div class="day-cell"><span class="day-number">1</span></div>
+        <div class="day-cell"><span class="day-number">2</span><div class="emotion-dot" style="background:#C9A87C;"></div></div>
+        <div class="day-cell"><span class="day-number">3</span></div>
+        <div class="day-cell"><span class="day-number">4</span><div class="emotion-dot" style="background:#78909C;"></div></div>
+        <div class="day-cell"><span class="day-number">5</span></div>
+        <div class="day-cell"><span class="day-number">6</span></div>
+        <div class="day-cell"><span class="day-number">7</span><div class="emotion-dot" style="background:#7BA08A;"></div></div>
+        <div class="day-cell"><span class="day-number">8</span></div>
+        <div class="day-cell"><span class="day-number">9</span></div>
+        <div class="day-cell"><span class="day-number">10</span><div class="emotion-dot" style="background:#B07872;"></div></div>
+        <div class="day-cell"><span class="day-number">11</span></div>
+        <div class="day-cell"><span class="day-number">12</span></div>
+        <div class="day-cell"><span class="day-number">13</span></div>
+        <div class="day-cell"><span class="day-number">14</span><div class="emotion-dot" style="background:#C9A87C;"></div></div>
+        <div class="day-cell"><span class="day-number">15</span></div>
+        <div class="day-cell"><span class="day-number">16</span></div>
+        <div class="day-cell today"><span class="day-number">17</span></div>
+        <div class="day-cell"><span class="day-number">18</span></div>
+        <div class="day-cell"><span class="day-number">19</span></div>
+        <div class="day-cell"><span class="day-number">20</span><div class="emotion-dot" style="background:#78909C;"></div></div>
+        <div class="day-cell"><span class="day-number">21</span></div>
+        <div class="day-cell"><span class="day-number">22</span></div>
+        <div class="day-cell"><span class="day-number">23</span></div>
+        <div class="day-cell"><span class="day-number">24</span></div>
+        <div class="day-cell"><span class="day-number">25</span></div>
+        <div class="day-cell"><span class="day-number">26</span></div>
+        <div class="day-cell"><span class="day-number">27</span><div class="emotion-dot" style="background:#7BA08A;"></div></div>
+        <div class="day-cell"><span class="day-number">28</span></div>
+        <div class="day-cell"><span class="day-number">29</span></div>
+        <div class="day-cell"><span class="day-number">30</span></div>
+      </div>
+
+      <div style="margin-top:16px;padding:12px;background:linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);border-radius:24px;border:1px solid var(--color-border);box-shadow:0 2px 8px rgba(0,0,0,0.25);">
+        <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px;">本月主要情绪</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-radius:12px;border-left:3px solid #C9A87C;background:linear-gradient(135deg, var(--color-surface-warm) 0%, rgba(255,255,255,0.02) 100%);">
+            <span style="font-size:13px;color:var(--color-text-primary);font-weight:500;">思念</span><span style="font-size:11px;color:var(--color-text-secondary);">5天</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-radius:12px;border-left:3px solid #78909C;background:linear-gradient(135deg, var(--color-surface-warm) 0%, rgba(255,255,255,0.02) 100%);">
+            <span style="font-size:13px;color:var(--color-text-primary);font-weight:500;">悲伤</span><span style="font-size:11px;color:var(--color-text-secondary);">3天</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

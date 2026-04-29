@@ -85,7 +85,7 @@ onMounted(() => {
   <view class="page" data-testid="home-page">
     <NavBar title="今日" data-testid="nav-bar" />
 
-    <view class="container">
+    <view class="container animate-fade-in-up">
       <!-- 危机横幅 -->
       <view
         v-if="showCrisisBanner"
@@ -163,6 +163,7 @@ onMounted(() => {
   padding: var(--space-md);
   margin-bottom: var(--space-lg);
   border: 1px solid #F0E6DC;
+  animation: fadeInDown 0.4s var(--ease-out) both;
 }
 
 .crisis-content {
@@ -197,6 +198,7 @@ onMounted(() => {
 .memorial-nudge {
   margin-bottom: var(--space-xl);
   padding: var(--space-lg) 0;
+  animation: fadeInUp 0.5s var(--ease-out) 0.1s both;
 }
 
 .memorial-text {
@@ -212,6 +214,7 @@ onMounted(() => {
   padding: var(--space-xl);
   box-shadow: var(--shadow-sm);
   margin-bottom: var(--space-xl);
+  animation: fadeInUp 0.5s var(--ease-out) 0.2s both;
 }
 
 .prompt-header {
@@ -270,6 +273,7 @@ onMounted(() => {
 
 .subscription-section {
   margin-top: var(--space-xl);
+  animation: fadeInUp 0.5s var(--ease-out) 0.3s both;
 }
 
 .subscription-link {

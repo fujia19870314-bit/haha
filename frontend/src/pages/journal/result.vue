@@ -44,7 +44,7 @@ onMounted(() => {
       </view>
     </view>
 
-    <view class="container">
+    <view class="container animate-fade-in-up">
       <!-- AI 回应卡片 -->
       <view class="response-card" data-testid="response-card">
         <view class="response-header">

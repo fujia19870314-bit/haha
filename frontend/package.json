@@ -4,7 +4,7 @@
   "description": "AI 哀伤引导日记 - 前端 (uni-app Vue 3)",
   "scripts": {
     "dev:mp-weixin": "uni",
-    "build:mp-weixin": "uni build",
+    "build:mp-weixin": "uni build -p mp-weixin && node scripts/fix-es5.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -15,8 +15,11 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "@dcloudio/types": "^3.4.0",
     "@dcloudio/vite-plugin-uni": "3.0.0-alpha-5000820260420001",
+    "@rollup/plugin-babel": "^7.0.0",
     "@vitejs/plugin-vue": "^5.0.0",
     "@vitest/coverage-v8": "^1.0.0",
     "@vue/test-utils": "^2.4.0",

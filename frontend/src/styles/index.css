@@ -1,6 +1,6 @@
 @import './tokens.css';
 
-/* 全局基础样式 */
+/* ===== 全局基础 ===== */
 page {
   background-color: var(--color-bg);
   color: var(--color-text-primary);
@@ -10,80 +10,220 @@ page {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 通用容器 */
 .container {
   padding: var(--space-md);
   max-width: 480px;
   margin: 0 auto;
 }
 
-/* 安全区适配 */
+/* 安全区 */
 .safe-area-top {
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
 }
-
 .safe-area-bottom {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* 文本工具类 */
-.text-serif {
-  font-family: var(--font-serif);
-}
+/* 文本工具 */
+.text-serif { font-family: var(--font-serif); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-muted { color: var(--color-text-muted); }
+.text-center { text-align: center; }
 
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.text-tertiary {
-  color: var(--color-text-tertiary);
-}
-
-.text-center {
-  text-align: center;
-}
-
-/* 按钮基础 */
+/* ===== 按钮系统 ===== */
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) var(--space-xl);
-  border-radius: var(--radius-md);
+  padding: 14px var(--space-xl);
+  border-radius: var(--radius-pill);
   font-size: var(--text-base);
   font-weight: 500;
   transition: all var(--duration-fast) var(--ease-out);
   border: none;
   cursor: pointer;
 }
-
 .btn-primary {
-  background-color: var(--color-accent);
-  color: #FFFFFF;
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
 }
-
 .btn-primary:active {
-  opacity: 0.85;
+  transform: scale(0.98);
+  background-color: var(--color-primary-dark);
 }
-
 .btn-secondary {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+.btn-secondary:active {
+  background-color: var(--color-primary-soft);
+}
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+}
+.btn:disabled, .btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-/* 卡片 */
+/* ===== 卡片 ===== */
 .card {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg);
+  padding: var(--space-xl);
   box-shadow: var(--shadow-sm);
 }
 
-/* 分割线 */
+/* ===== 分割线 ===== */
 .divider {
   height: 1px;
   background-color: var(--color-border);
   margin: var(--space-md) 0;
+}
+
+/* ===== 统一导航栏 ===== */
+.nav-bar {
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-light);
+}
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--space-md);
+  height: 48px;
+}
+.back-btn {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  min-width: 60px;
+  transition: color var(--duration-fast);
+}
+.back-btn:active {
+  color: var(--color-primary);
+}
+.nav-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+}
+.nav-placeholder {
+  min-width: 60px;
+}
+
+/* 情绪标签 pill */
+.emotion-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  transition: all var(--duration-fast);
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* 动画工具类 */
+.animate-fade-in {
+  animation: fadeIn 0.4s var(--ease-out) forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s var(--ease-out) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s var(--ease-out) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s var(--ease-out) forwards;
+}
+
+/* 骨架屏 */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface-muted) 25%, var(--color-border-light) 50%, var(--color-surface-muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* 卡片悬停效果 */
+.card-hover {
+  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.card-hover:active {
+  transform: scale(0.98);
+}
+
+/* 页面切换淡入 */
+.page-enter {
+  animation: fadeInUp 0.3s var(--ease-out) forwards;
 }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
 interface CalendarDay {
@@ -244,7 +244,12 @@ onMounted(() => {
       </view>
 
       <!-- Monthly stats -->
-      <view v-if="emotionStats.length > 0" class="stats-section" data-testid="monthly-stats">
+      <view v-if="emotionStats.length === 0" class="empty-stats">
+        <text class="empty-stats-text">本月还没有日记记录</text>
+        <text class="empty-stats-sub">坚持记录，你会发现情绪的变化轨迹</text>
+      </view>
+
+      <view v-else class="stats-section" data-testid="monthly-stats">
         <text class="stats-title">本月主要情绪</text>
         <view class="stats-list">
           <view
@@ -282,7 +287,7 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 12px var(--space-md);
-  height: 44px;
+  height: 48px;
 }
 
 .back-btn {
@@ -295,6 +300,8 @@ onMounted(() => {
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+  font-family: var(--font-serif);
 }
 
 .nav-placeholder {
@@ -317,6 +324,11 @@ onMounted(() => {
   font-size: var(--text-lg);
   color: var(--color-text-secondary);
   padding: var(--space-sm);
+  transition: color var(--duration-fast);
+}
+
+.arrow:active {
+  color: var(--color-primary);
 }
 
 .month-title {
@@ -325,6 +337,8 @@ onMounted(() => {
   color: var(--color-text-primary);
   min-width: 140px;
   text-align: center;
+  font-family: var(--font-serif);
+  letter-spacing: 0.5px;
 }
 
 .week-header {
@@ -338,15 +352,18 @@ onMounted(() => {
   color: var(--color-text-tertiary);
   width: 36px;
   text-align: center;
+  font-weight: 500;
 }
 
 .calendar-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-md) var(--space-sm);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .calendar-cell {
@@ -357,6 +374,12 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   position: relative;
+  border-radius: var(--radius-md);
+  transition: background var(--duration-fast);
+}
+
+.calendar-cell:active {
+  background: var(--color-primary-soft);
 }
 
 .day-number {
@@ -369,7 +392,7 @@ onMounted(() => {
 }
 
 .calendar-cell.today .day-number {
-  color: var(--color-primary);
+  color: var(--color-gold);
   font-weight: 600;
 }
 
@@ -378,6 +401,7 @@ onMounted(() => {
   height: 6px;
   border-radius: 50%;
   margin-top: 2px;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
 }
 
 .legend {
@@ -386,8 +410,10 @@ onMounted(() => {
   gap: var(--space-md);
   margin-top: var(--space-lg);
   padding: var(--space-md);
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .legend-item {
@@ -400,6 +426,7 @@ onMounted(() => {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
 }
 
 .legend-text {
@@ -410,8 +437,10 @@ onMounted(() => {
 .stats-section {
   margin-top: var(--space-lg);
   padding: var(--space-lg);
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .stats-title {
@@ -419,6 +448,7 @@ onMounted(() => {
   font-weight: 500;
   color: var(--color-text-primary);
   margin-bottom: var(--space-md);
+  letter-spacing: 0.5px;
 }
 
 .stats-list {
@@ -440,15 +470,37 @@ onMounted(() => {
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   border-left: 3px solid;
+  background: linear-gradient(135deg, var(--color-surface-warm) 0%, rgba(255, 255, 255, 0.02) 100%);
 }
 
 .stat-label {
   font-size: var(--text-sm);
   color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 .stat-count {
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
+}
+
+.empty-stats {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+  animation: fadeInUp 0.5s var(--ease-out) forwards;
+}
+
+.empty-stats-text {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-serif);
+}
+
+.empty-stats-sub {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  display: block;
 }
 </style>

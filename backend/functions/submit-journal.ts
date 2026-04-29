@@ -6,6 +6,8 @@ import { CrisisDetector } from '../lib/crisis-detector';
 import { encryptToString } from '../lib/encryption';
 import { getSystemPrompt, PromptTemplate } from '../lib/system-prompt';
 import { QwenProvider } from '../lib/qwen-provider';
+import { AppError, createErrorResponse, logError } from '../lib/error-handler';
+import { validateJournalContent, filterAIResponse } from '../lib/content-filter';
 
 export interface SubmitJournalRequest {
   userId: string;
@@ -23,6 +25,7 @@ export interface JournalResponse {
   crisisDetected: boolean;
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
   hotlines?: string[];
+  emotionTag: string;
 }
 
 export class SubmitJournalHandler {
@@ -30,19 +33,22 @@ export class SubmitJournalHandler {
   private llmProvider: QwenProvider;
 
   constructor() {
-    this.crisisDetector = new CrisisDetector();
     const apiKey = process.env.QWEN_API_KEY;
     if (!apiKey) {
       throw new Error('QWEN_API_KEY is required');
     }
     this.llmProvider = new QwenProvider({ apiKey });
+    // 启用 LLM 危机检测（双模式）
+    this.crisisDetector = new CrisisDetector(true);
   }
 
   /**
    * 提交日记主逻辑
-   * 1. 危机检测
-   * 2. 调用 AI
-   * 3. 加密存储
+   * 1. 内容安全校验
+   * 2. LLM 情绪分析
+   * 3. 危机检测（关键词 + LLM 双模式）
+   * 4. 调用 AI 获取回复
+   * 5. 加密存储
    */
   async submitJournal(
     request: SubmitJournalRequest
@@ -50,50 +56,60 @@ export class SubmitJournalHandler {
     try {
       // 验证输入
       if (!request.content || request.content.trim() === '') {
-        return {
-          success: false,
-          error: '日记内容不能为空'
-        };
+        throw new AppError('JOURNAL_EMPTY');
       }
 
       if (!request.userId) {
-        return {
-          success: false,
-          error: 'userId 不能为空'
-        };
+        throw new AppError('UNAUTHORIZED');
+      }
+
+      if (request.content.length > 5000) {
+        throw new AppError('JOURNAL_TOO_LONG');
+      }
+
+      // 内容安全校验
+      const contentValidation = validateJournalContent(request.content);
+      if (!contentValidation.valid) {
+        throw new AppError('CONTENT_BLOCKED', contentValidation.error);
       }
 
       // 检查用户是否存在
       const user = await db.getUserById(request.userId);
       if (!user) {
-        return {
-          success: false,
-          error: '用户不存在'
-        };
+        throw new AppError('USER_NOT_FOUND');
       }
 
-      // 步骤 1：危机检测
+      // 步骤 1：LLM 情绪分析
+      const emotionTag = await this.analyzeEmotion(request.content, request.mood);
+
+      // 步骤 2：危机检测（关键词 + LLM 双模式）
       const crisisResult = await this.crisisDetector.detect(request.content);
 
-      // 步骤 2：调用 AI 获取回复
+      // 步骤 3：调用 AI 获取回复
       const aiResponse = await this.getAIResponse(
         request.content,
         crisisResult.riskLevel
       );
 
-      // 步骤 3：加密存储
+      // 对 AI 响应进行内容安全过滤
+      const filteredResponse = filterAIResponse(aiResponse.content);
+      const finalAiContent = filteredResponse.isClean
+        ? aiResponse.content
+        : filteredResponse.cleanedText;
+
+      // 步骤 4：加密存储
       const encryptionKey = process.env.ENCRYPTION_KEY;
       if (!encryptionKey) {
-        throw new Error('ENCRYPTION_KEY is required');
+        throw new AppError('ENCRYPTION_ERROR');
       }
       const encryptedContent = encryptToString(request.content, encryptionKey);
 
-      // 创建日记记录（仅存储加密内容，不存明文）
+      // 创建日记记录
       const journal = await db.createJournal({
         userId: request.userId,
         encryptedContent,
-        aiResponse: aiResponse.content,
-        emotionTag: request.mood || ''
+        aiResponse: finalAiContent,
+        emotionTag,
         crisisDetected: crisisResult.hasCrisis,
         crisisRiskLevel: crisisResult.riskLevel
       });
@@ -102,12 +118,13 @@ export class SubmitJournalHandler {
       const response: JournalResponse = {
         journal,
         aiResponse: {
-          content: aiResponse.content,
+          content: finalAiContent,
           model: aiResponse.model,
           provider: aiResponse.provider
         },
         crisisDetected: crisisResult.hasCrisis,
-        riskLevel: crisisResult.riskLevel
+        riskLevel: crisisResult.riskLevel,
+        emotionTag
       };
 
       // 如果检测到危机，返回热线信息
@@ -120,10 +137,45 @@ export class SubmitJournalHandler {
         data: response
       };
     } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '提交日记失败'
-      };
+      logError('submitJournal', error);
+      return createErrorResponse(error) as ApiResponse<JournalResponse>;
+    }
+  }
+
+  /**
+   * 使用 LLM 分析情绪
+   * 如果 LLM 失败，回退到用户选择的 mood
+   */
+  private async analyzeEmotion(
+    content: string,
+    fallbackMood?: string
+  ): Promise<string> {
+    try {
+      const systemPrompt = getSystemPrompt(PromptTemplate.EMOTION_ANALYSIS);
+      const response = await this.llmProvider.chat({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content }
+        ],
+        temperature: 0.3,
+        maxTokens: 50
+      });
+
+      const result = response.content.trim();
+
+      // 验证返回的标签是否有效
+      const validEmotions = ['悲伤', '思念', '愤怒', '内疚', '平静', '温暖', '焦虑', '麻木', '混乱'];
+      const matched = validEmotions.find(e => result.includes(e));
+
+      if (matched) {
+        return matched;
+      }
+
+      // 如果 LLM 返回无效标签，回退
+      return fallbackMood || '平静';
+    } catch (error) {
+      logError('analyzeEmotion', error);
+      return fallbackMood || '平静';
     }
   }
 
@@ -163,6 +215,7 @@ export class SubmitJournalHandler {
         provider: response.provider
       };
     } catch (error) {
+      logError('getAIResponse', error);
       // LLM 调用失败时返回兜底回复
       return {
         content: '谢谢你愿意分享这些。你的感受很重要。',
@@ -181,10 +234,7 @@ export class SubmitJournalHandler {
   ): Promise<ApiResponse<JournalEntry[]>> {
     try {
       if (!userId) {
-        return {
-          success: false,
-          error: 'userId 不能为空'
-        };
+        throw new AppError('UNAUTHORIZED');
       }
 
       const journals = await db.getJournalsByUserId(userId, limit);
@@ -194,10 +244,8 @@ export class SubmitJournalHandler {
         data: journals
       };
     } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : '获取日记历史失败'
-      };
+      logError('getJournalHistory', error);
+      return createErrorResponse(error) as ApiResponse<JournalEntry[]>;
     }
   }
 }

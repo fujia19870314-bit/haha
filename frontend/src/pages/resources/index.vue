@@ -297,7 +297,7 @@ onMounted(() => {
 .verified-badge {
   font-size: var(--text-xs);
   color: var(--color-primary);
-  background: var(--color-primary-bg);
+  background: var(--color-primary-light);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
 }

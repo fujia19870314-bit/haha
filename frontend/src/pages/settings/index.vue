@@ -226,7 +226,7 @@ onMounted(() => {
 
 .noise-item.active {
   opacity: 1;
-  background: var(--color-primary-bg);
+  background: var(--color-primary-light);
 }
 
 .noise-icon {

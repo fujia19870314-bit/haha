@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 interface Props {
   title?: string
 }
@@ -38,7 +38,7 @@ function goToCrisis() {
   align-items: center;
   justify-content: space-between;
   padding: 12px var(--space-md);
-  height: 44px;
+  height: 48px;
 }
 
 .nav-title {
@@ -46,20 +46,30 @@ function goToCrisis() {
   font-weight: 600;
   color: var(--color-text-primary);
   font-family: var(--font-serif);
+  letter-spacing: 0.5px;
 }
 
 .crisis-btn {
-  background-color: var(--color-crisis-light);
-  border-radius: var(--radius-sm);
-  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--color-crisis-soft) 0%, var(--color-crisis-light) 100%);
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  border: 1px solid var(--color-crisis-light);
+}
+
+.crisis-btn:active {
+  transform: scale(0.95);
+  background: var(--color-crisis-light);
+  box-shadow: 0 0 12px rgba(196, 120, 110, 0.2);
 }
 
 .crisis-text {
   font-size: var(--text-xs);
   color: var(--color-crisis);
   font-weight: 500;
+  letter-spacing: 0.5px;
 }
 </style>

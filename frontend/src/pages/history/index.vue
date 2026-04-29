@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
 interface HistoryItem {
@@ -50,6 +50,20 @@ function handleBack() {
   uni.navigateBack()
 }
 
+function viewDetail(item: HistoryItem) {
+  // 将数据存入 storage，详情页读取
+  const detail = {
+    id: item.id,
+    content: item.content || item.aiResponse.slice(0, 60) + '...',
+    aiResponse: item.aiResponse,
+    emotionTag: item.emotionTag,
+    createdAt: item.createdAt,
+    crisisDetected: item.crisisDetected || false
+  }
+  uni.setStorageSync('journal_detail_view', JSON.stringify(detail))
+  uni.navigateTo({ url: '/pages/journal/detail' })
+}
+
 onMounted(() => {
   loadHistory()
 })
@@ -65,11 +79,15 @@ onMounted(() => {
       </view>
     </view>
 
-    <view class="container">
+    <view class="container animate-fade-in-up">
       <!-- 空状态 -->
       <view v-if="!loading && historyList.length === 0" class="empty-state" data-testid="empty-state">
-        <text class="empty-text">还没有日记</text>
-        <text class="empty-subtext">开始书写你的第一篇日记吧</text>
+        <view class="empty-icon">📝</view>
+        <text class="empty-text">这里还空空如也</text>
+        <text class="empty-subtext">每一篇日记都是一次与自己对话的开始</text>
+        <view class="empty-action" data-testid="write-first-btn" @click="uni.switchTab({ url: '/pages/journal/write' })">
+          <text class="empty-action-text">写下第一篇日记</text>
+        </view>
       </view>
 
       <!-- 历史列表 -->
@@ -79,6 +97,7 @@ onMounted(() => {
           :key="item.id"
           class="history-item"
           :data-testid="`history-item-${item.id}`"
+          @click="viewDetail(item)"
         >
           <view class="item-header">
             <view class="date-badge">
@@ -119,7 +138,7 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 12px var(--space-md);
-  height: 44px;
+  height: 48px;
 }
 
 .back-btn {
@@ -132,6 +151,8 @@ onMounted(() => {
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+  font-family: var(--font-serif);
 }
 
 .nav-placeholder {
@@ -147,18 +168,48 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-3xl) 0;
-  gap: var(--space-sm);
+  padding: var(--space-3xl) var(--space-lg);
+  text-align: center;
+  animation: fadeInUp 0.6s var(--ease-out) forwards;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--space-lg);
+  opacity: 0.6;
 }
 
 .empty-text {
-  font-size: var(--text-lg);
-  color: var(--color-text-secondary);
+  font-size: var(--text-xl);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-serif);
 }
 
 .empty-subtext {
   font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
+
+.empty-action {
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-primary);
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.empty-action:active {
+  transform: scale(0.96);
+  background: var(--color-primary-dark);
+}
+
+.empty-action-text {
+  font-size: var(--text-base);
+  color: var(--color-text-on-primary);
+  font-weight: 500;
 }
 
 .history-list {
@@ -168,10 +219,18 @@ onMounted(() => {
 }
 
 .history-item {
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  transition: all var(--duration-fast);
+  animation: fadeInUp 0.4s var(--ease-out) both;
+}
+
+.history-item:active {
+  transform: scale(0.99);
+  box-shadow: var(--shadow-md);
 }
 
 .item-header {
@@ -183,14 +242,14 @@ onMounted(() => {
 
 .date-badge {
   display: flex;
-  gap: var(--space-sm);
   align-items: center;
+  gap: var(--space-xs);
 }
 
 .date-text {
   font-size: var(--text-sm);
-  font-weight: 500;
   color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 .time-text {
@@ -199,22 +258,27 @@ onMounted(() => {
 }
 
 .emotion-tag {
-  padding: 4px 10px;
-  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-pill);
   font-size: var(--text-xs);
+  font-weight: 500;
+  border: 1px solid transparent;
 }
 
 .emotion-text {
-  font-weight: 500;
+  font-size: var(--text-xs);
 }
 
 .item-content {
-  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
 }
 
 .preview-text {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   line-height: 1.6;
+  display: block;
+  font-family: var(--font-serif);
 }
 </style>

@@ -1,6 +1,9 @@
-// 危机检测模块
+// 危机检测模块 - 支持关键词匹配 + LLM 双模式
 
 import type { CrisisDetectionResult } from '../types/llm';
+import { getSystemPrompt, PromptTemplate } from './system-prompt';
+import { QwenProvider } from './qwen-provider';
+import { logError } from './error-handler';
 
 // 危机关键词库 - 按风险等级分类
 const CRISIS_KEYWORDS = {
@@ -33,6 +36,19 @@ const ALL_KEYWORDS = [
 ];
 
 export class CrisisDetector {
+  private llmProvider?: QwenProvider;
+  private useLLM: boolean;
+
+  constructor(useLLM = false) {
+    this.useLLM = useLLM;
+    if (useLLM) {
+      const apiKey = process.env.QWEN_API_KEY;
+      if (apiKey) {
+        this.llmProvider = new QwenProvider({ apiKey });
+      }
+    }
+  }
+
   /**
    * 检测文本中的危机关键词
    */
@@ -57,19 +73,16 @@ export class CrisisDetector {
       return 'low';
     }
 
-    // 检查是否有关键词在 critical 列表中
     const hasCritical = keywords.some(k => CRISIS_KEYWORDS.critical.includes(k));
     if (hasCritical) {
       return 'critical';
     }
 
-    // 检查是否有关键词在 high 列表中
     const hasHigh = keywords.some(k => CRISIS_KEYWORDS.high.includes(k));
     if (hasHigh) {
       return 'high';
     }
 
-    // 检查是否有关键词在 medium 列表中
     const hasMedium = keywords.some(k => CRISIS_KEYWORDS.medium.includes(k));
     if (hasMedium) {
       return 'medium';
@@ -80,7 +93,6 @@ export class CrisisDetector {
 
   /**
    * 计算语义风险分数 (0-1)
-   * 基于关键词强度和数量的简单算法
    */
   calculateSemanticScore(text: string): number {
     const keywords = this.detectKeywords(text);
@@ -99,7 +111,6 @@ export class CrisisDetector {
       }
     }
 
-    // 根据文本长度调整 - 危机相关词在短文本中权重更高
     const textLength = text.length;
     if (textLength < 20) {
       score *= 1.5;
@@ -113,10 +124,56 @@ export class CrisisDetector {
   }
 
   /**
-   * 完整的危机检测
+   * 使用 LLM 进行危机检测
    */
-  async detect(text: string): Promise<CrisisDetectionResult> {
-    // 处理空文本
+  async detectWithLLM(text: string): Promise<CrisisDetectionResult> {
+    if (!this.llmProvider) {
+      throw new Error('LLM provider not initialized');
+    }
+
+    const systemPrompt = getSystemPrompt(PromptTemplate.CRISIS_DETECTION);
+
+    const response = await this.llmProvider.chat({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: text }
+      ],
+      temperature: 0.1,
+      maxTokens: 200
+    });
+
+    // 解析 LLM 返回的 JSON
+    const content = response.content.trim();
+    let jsonStr = content;
+
+    // 尝试提取 JSON 部分
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      jsonStr = jsonMatch[0];
+    }
+
+    try {
+      const result = JSON.parse(jsonStr);
+      const riskLevel = ['low', 'medium', 'high', 'critical'].includes(result.riskLevel)
+        ? result.riskLevel as 'low' | 'medium' | 'high' | 'critical'
+        : 'low';
+
+      return {
+        riskLevel,
+        detectedKeywords: result.keywords || result.reason || [],
+        semanticScore: riskLevel === 'critical' ? 0.9 : riskLevel === 'high' ? 0.7 : riskLevel === 'medium' ? 0.4 : 0,
+        hasCrisis: result.hasCrisis === true || riskLevel !== 'low'
+      };
+    } catch {
+      // JSON 解析失败，回退到关键词检测
+      return this.detectWithKeywords(text);
+    }
+  }
+
+  /**
+   * 使用关键词进行危机检测
+   */
+  detectWithKeywords(text: string): CrisisDetectionResult {
     if (!text || text.trim().length === 0) {
       return {
         riskLevel: 'low',
@@ -129,9 +186,6 @@ export class CrisisDetector {
     const keywords = this.detectKeywords(text);
     const riskLevel = this.calculateRiskLevel(keywords);
     const semanticScore = this.calculateSemanticScore(text);
-
-    // 定义危机阈值
-    // medium 及以上都视为需要关注的危机
     const hasCrisis = riskLevel !== 'low';
 
     return {
@@ -140,6 +194,51 @@ export class CrisisDetector {
       semanticScore,
       hasCrisis
     };
+  }
+
+  /**
+   * 完整的危机检测 - 优先使用 LLM，失败时回退到关键词
+   */
+  async detect(text: string): Promise<CrisisDetectionResult> {
+    if (!text || text.trim().length === 0) {
+      return {
+        riskLevel: 'low',
+        detectedKeywords: [],
+        semanticScore: 0,
+        hasCrisis: false
+      };
+    }
+
+    // 先进行关键词快速检测
+    const keywordResult = this.detectWithKeywords(text);
+
+    // 如果关键词检测发现高风险，直接使用结果
+    if (keywordResult.riskLevel === 'critical' || keywordResult.riskLevel === 'high') {
+      return keywordResult;
+    }
+
+    // 如果启用了 LLM 且关键词检测为 low/medium，用 LLM 二次确认
+    if (this.useLLM && this.llmProvider) {
+      try {
+        const llmResult = await this.detectWithLLM(text);
+        // 取风险等级更高的结果
+        const riskLevels = ['low', 'medium', 'high', 'critical'];
+        const keywordIndex = riskLevels.indexOf(keywordResult.riskLevel);
+        const llmIndex = riskLevels.indexOf(llmResult.riskLevel);
+
+        if (llmIndex > keywordIndex) {
+          return {
+            ...llmResult,
+            detectedKeywords: [...new Set([...keywordResult.detectedKeywords, ...llmResult.detectedKeywords])]
+          };
+        }
+      } catch (error) {
+        logError('CrisisDetector.detect', error);
+        // LLM 失败时回退到关键词结果
+      }
+    }
+
+    return keywordResult;
   }
 
   /**
@@ -152,7 +251,6 @@ export class CrisisDetector {
       '生命热线：400-821-1215'
     ];
 
-    // 这里可以根据地区返回不同的热线
     return nationalHotlines;
   }
 }

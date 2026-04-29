@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 interface Hotline {
   name: string
   number: string
@@ -118,7 +118,7 @@ function handleBack() {
   align-items: center;
   justify-content: space-between;
   padding: 12px var(--space-md);
-  height: 44px;
+  height: 48px;
 }
 
 .back-btn {
@@ -131,6 +131,8 @@ function handleBack() {
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+  font-family: var(--font-serif);
 }
 
 .nav-placeholder {
@@ -153,6 +155,7 @@ function handleBack() {
   color: var(--color-text-primary);
   display: block;
   margin-bottom: var(--space-md);
+  letter-spacing: 0.5px;
 }
 
 .comfort-text {
@@ -160,21 +163,24 @@ function handleBack() {
   color: var(--color-text-secondary);
   line-height: 1.7;
   display: block;
+  font-family: var(--font-serif);
 }
 
 .emergency-notice {
-  background-color: var(--color-crisis-light);
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-crisis-light) 0%, rgba(196, 120, 110, 0.05) 100%);
+  border-radius: var(--radius-lg);
   padding: var(--space-md);
   margin-bottom: var(--space-xl);
   text-align: center;
-  border: 1px solid #F5B7B1;
+  border: 1px solid rgba(196, 120, 110, 0.15);
+  box-shadow: 0 4px 16px rgba(196, 120, 110, 0.06);
 }
 
 .emergency-text {
   font-size: var(--text-sm);
   color: var(--color-crisis);
   font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .hotlines-section {
@@ -187,6 +193,7 @@ function handleBack() {
   color: var(--color-text-primary);
   margin-bottom: var(--space-md);
   display: block;
+  letter-spacing: 0.5px;
 }
 
 .hotline-list {
@@ -196,16 +203,17 @@ function handleBack() {
 }
 
 .hotline-card {
-  background-color: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-fast);
 }
 
 .hotline-card:active {
-  background-color: var(--color-accent-light);
+  background: linear-gradient(135deg, var(--color-crisis-soft) 0%, rgba(196, 120, 110, 0.03) 100%);
+  border-color: rgba(196, 120, 110, 0.12);
 }
 
 .hotline-main {
@@ -231,7 +239,7 @@ function handleBack() {
 .hotline-number {
   font-size: var(--text-lg);
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-gold);
 }
 
 .hotline-hours {

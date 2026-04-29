@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 import { generatePdf } from '../../services/api'
 
@@ -147,7 +147,7 @@ loadUserId()
   align-items: center;
   justify-content: space-between;
   padding: 12px var(--space-md);
-  height: 44px;
+  height: 48px;
 }
 
 .back-btn {
@@ -160,6 +160,8 @@ loadUserId()
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+  font-family: var(--font-serif);
 }
 
 .nav-placeholder {
@@ -171,10 +173,12 @@ loadUserId()
 }
 
 .intro-card {
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   margin-bottom: var(--space-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .intro-title {
@@ -183,6 +187,7 @@ loadUserId()
   color: var(--color-text-primary);
   display: block;
   margin-bottom: var(--space-sm);
+  font-family: var(--font-serif);
 }
 
 .intro-desc {
@@ -193,10 +198,12 @@ loadUserId()
 }
 
 .preview-section {
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   margin-bottom: var(--space-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .section-title {
@@ -205,6 +212,7 @@ loadUserId()
   color: var(--color-text-primary);
   display: block;
   margin-bottom: var(--space-md);
+  font-family: var(--font-serif);
 }
 
 .feature-list {
@@ -217,6 +225,12 @@ loadUserId()
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.feature-item:last-child {
+  border-bottom: none;
 }
 
 .feature-icon {
@@ -235,20 +249,25 @@ loadUserId()
 .generate-btn {
   width: 100%;
   padding: var(--space-md);
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-text-on-primary);
+  border-radius: var(--radius-pill);
   font-size: var(--text-md);
   font-weight: 500;
   border: none;
+  box-shadow: 0 4px 16px rgba(201, 168, 124, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all var(--duration-fast);
+  position: relative;
+  overflow: hidden;
 }
 
 .generate-btn.generating {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .generate-btn::after {
   border: none;
+  content: none;
 }
 
 .error-text {
@@ -260,10 +279,11 @@ loadUserId()
 }
 
 .result-card {
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-warm) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
-  border-left: 4px solid var(--color-primary);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .result-title {
@@ -272,6 +292,7 @@ loadUserId()
   color: var(--color-text-primary);
   display: block;
   margin-bottom: var(--space-md);
+  font-family: var(--font-serif);
 }
 
 .result-info {
@@ -293,5 +314,6 @@ loadUserId()
 .result-value {
   font-size: var(--text-sm);
   color: var(--color-text-primary);
+  font-weight: 500;
 }
 </style>

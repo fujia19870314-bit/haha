@@ -29,6 +29,13 @@
       }
     },
     {
+      "path": "pages/journal/detail",
+      "style": {
+        "navigationBarTitleText": "日记详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/crisis/help",
       "style": {
         "navigationBarTitleText": "危机帮助",
@@ -80,12 +87,12 @@
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarBackgroundColor": "#F8F6F3",
-    "backgroundColor": "#F8F6F3"
+    "navigationBarBackgroundColor": "#F5F0EB",
+    "backgroundColor": "#F5F0EB"
   },
   "tabBar": {
     "color": "#9E9A93",
-    "selectedColor": "#5A6B5C",
+    "selectedColor": "#4A6352",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [

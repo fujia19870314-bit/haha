@@ -89,7 +89,7 @@ function handleBack() {
       </view>
     </view>
 
-    <view class="container">
+    <view class="container animate-fade-in-up">
       <!-- 情绪选择 -->
       <view class="section">
         <text class="section-title">此刻的感受</text>

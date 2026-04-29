@@ -4,3 +4,13 @@ coverage/
 .DS_Store
 .env
 .env.local
+
+# Build outputs
+frontend/dist/
+
+# Claude Code worktrees
+.claude/
+
+# Temporary files
+tmp/
+
