@@ -21,7 +21,7 @@ function buildPattern(words: string[]): RegExp {
     w.split('').map(c => {
       if (/[.*+?^${}()|[\]\\]/.test(c)) return '\\' + c;
       return c;
-    }).join('[\s\-_]*')
+    }).join('[\\s\\-_]*')
   );
   return new RegExp(escaped.join('|'), 'gi');
 }

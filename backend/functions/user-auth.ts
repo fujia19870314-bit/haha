@@ -1,9 +1,9 @@
 // 用户认证云函数
 
-import type { ApiResponse, User } from '../types/database';
-import type { GriefStage } from '../types/database';
-import { db } from '../lib/database';
-import { wechatAPI } from '../lib/wechat-api';
+import type { ApiResponse, User } from '../types/database.js';
+import type { GriefStage } from '../types/database.js';
+import { db } from '../lib/database.js';
+import { wechatAPI } from '../lib/wechat-api.js';
 
 export interface AuthRequest {
   code: string;

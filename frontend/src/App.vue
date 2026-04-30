@@ -1,6 +1,14 @@
 <script setup lang="ts">
-// 应用根组件
-// uni-app 生命周期由框架自动管理
+import { onLaunch } from '@dcloudio/uni-app'
+import { isWeb } from './services/platform.js'
+import { isLoggedIn } from './services/auth.js'
+
+// Web 平台启动时检查登录状态
+onLaunch(() => {
+  if (isWeb() && !isLoggedIn()) {
+    uni.navigateTo({ url: '/pages/login/index' })
+  }
+})
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 // PDF 纪念册导出云函数
 
-import type { ApiResponse, JournalEntry } from '../types/database';
-import { db } from '../lib/database';
+import type { ApiResponse, JournalEntry } from '../types/database.js';
+import { db } from '../lib/database.js';
 
 export interface GeneratePdfRequest {
   userId: string;
@@ -51,7 +51,7 @@ export class GeneratePdfHandler {
 
       // MVP 阶段：模拟 PDF 生成
       // 生产环境应调用真实的 PDF 生成服务
-      const fileName = `纪念册_${user.openid.slice(0, 8)}_${Date.now()}.pdf`;
+      const fileName = `纪念册_${(user.openid || user.id).slice(0, 8)}_${Date.now()}.pdf`;
       const pageCount = Math.max(1, Math.ceil(journals.length / 2));
 
       // 模拟异步生成后的下载链接

@@ -1,7 +1,7 @@
 // 获取心理咨询师目录云函数
 
-import type { ApiResponse, Therapist } from '../types/database';
-import { db } from '../lib/database';
+import type { ApiResponse, Therapist } from '../types/database.js';
+import { db } from '../lib/database.js';
 
 export interface GetResourcesRequest {
   city?: string;

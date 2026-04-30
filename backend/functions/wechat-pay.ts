@@ -1,8 +1,8 @@
 // 微信支付处理云函数
 
-import type { ApiResponse, PaymentOrder } from '../types/database';
-import { db } from '../lib/database';
-import { wechatAPI } from '../lib/wechat-api';
+import type { ApiResponse, PaymentOrder } from '../types/database.js';
+import { db } from '../lib/database.js';
+import { wechatAPI } from '../lib/wechat-api.js';
 
 export interface CreateOrderRequest {
   userId: string;

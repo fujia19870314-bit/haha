@@ -2,10 +2,15 @@
 
 export interface User {
   id: string;
-  openid: string;
+  // 微信用户字段
+  openid?: string;
   unionid?: string;
   nickname?: string;
   avatar?: string;
+  // Web 用户字段
+  email?: string;
+  passwordHash?: string;
+  // 通用字段
   griefStage: GriefStage;
   isPremium: boolean;
   trialEndsAt: Date;

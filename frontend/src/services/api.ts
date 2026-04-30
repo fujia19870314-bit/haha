@@ -1,10 +1,4 @@
-const BASE_URL = '/api'
-
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-}
+import { httpRequest } from './http.js'
 
 interface DailyPrompt {
   prompt: string
@@ -78,38 +72,8 @@ interface PdfExportResponse {
   generatedAt: string
 }
 
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message
-  return '请求失败'
-}
-
-async function request<T>(
-  url: string,
-  method: 'GET' | 'POST',
-  data?: unknown
-): Promise<T> {
-  const res = await uni.request({
-    url: `${BASE_URL}${url}`,
-    method,
-    data,
-    header: { 'Content-Type': 'application/json' }
-  }) as any
-
-  const body: ApiResponse<T> = res.data
-
-  if (!body.success) {
-    throw new Error(body.error || '请求失败')
-  }
-
-  if (body.data === undefined) {
-    throw new Error('响应数据为空')
-  }
-
-  return body.data
-}
-
 export async function getDailyPrompt(): Promise<DailyPrompt> {
-  return request<DailyPrompt>('/get-daily-prompt', 'GET')
+  return httpRequest<DailyPrompt>('/get-daily-prompt', 'GET')
 }
 
 export async function submitJournal(
@@ -121,7 +85,7 @@ export async function submitJournal(
   if (!payload.content || payload.content.trim().length === 0) {
     throw new Error('请填写内容')
   }
-  return request<JournalResponse>('/submit-journal', 'POST', payload)
+  return httpRequest<JournalResponse>('/submit-journal', 'POST', payload)
 }
 
 export async function createWechatPayOrder(
@@ -130,24 +94,24 @@ export async function createWechatPayOrder(
   if (!amount || amount <= 0) {
     throw new Error('金额无效')
   }
-  return request<PayOrderResponse>('/wechat-pay', 'POST', { amount })
+  return httpRequest<PayOrderResponse>('/wechat-pay', 'POST', { amount })
 }
 
 export async function getJournalHistory(userId: string): Promise<JournalHistoryItem[]> {
   if (!userId) {
     throw new Error('userId 不能为空')
   }
-  return request<JournalHistoryItem[]>(`/journal-history?userId=${userId}`, 'GET')
+  return httpRequest<JournalHistoryItem[]>(`/journal-history?userId=${userId}`, 'GET')
 }
 
 export async function getResources(city?: string): Promise<ResourcesResponse> {
   const url = city ? `/get-resources?city=${encodeURIComponent(city)}` : '/get-resources'
-  return request<ResourcesResponse>(url, 'GET')
+  return httpRequest<ResourcesResponse>(url, 'GET')
 }
 
 export async function generatePdf(userId: string): Promise<PdfExportResponse> {
   if (!userId) {
     throw new Error('userId 不能为空')
   }
-  return request<PdfExportResponse>('/generate-pdf', 'POST', { userId })
+  return httpRequest<PdfExportResponse>('/generate-pdf', 'POST', { userId })
 }

@@ -1,8 +1,17 @@
 // 数据库访问层 - 仓储模式
+// 根据环境变量自动选择 InMemory（开发/测试）或 PostgreSQL（生产）
 
-import type { User, JournalEntry, PromptTemplate, PaymentOrder, Therapist, GriefStage } from '../types/database';
+import type {
+  User,
+  JournalEntry,
+  PromptTemplate,
+  PaymentOrder,
+  Therapist,
+  GriefStage,
+} from '../types/database.js';
+import { PostgreSQLDatabase } from './pg-database.js';
 
-// 内存数据库用于测试（生产环境替换为真实数据库）
+// 内存数据库用于测试和无数据库环境
 export class InMemoryDatabase {
   private users: Map<string, User> = new Map();
   private journals: Map<string, JournalEntry> = new Map();
@@ -17,7 +26,7 @@ export class InMemoryDatabase {
       ...data,
       id: crypto.randomUUID(),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     };
     this.users.set(user.id, user);
     return user;
@@ -36,6 +45,28 @@ export class InMemoryDatabase {
     return null;
   }
 
+  async getUserByEmail(email: string): Promise<User | null> {
+    for (const user of this.users.values()) {
+      if (user.email === email) {
+        return user;
+      }
+    }
+    return null;
+  }
+
+  async updatePassword(id: string, passwordHash: string): Promise<User | null> {
+    const user = this.users.get(id);
+    if (!user) return null;
+
+    const updated = {
+      ...user,
+      passwordHash,
+      updatedAt: new Date(),
+    };
+    this.users.set(id, updated);
+    return updated;
+  }
+
   async updateUser(id: string, data: Partial<User>): Promise<User | null> {
     const user = this.users.get(id);
     if (!user) return null;
@@ -43,7 +74,7 @@ export class InMemoryDatabase {
     const updated = {
       ...user,
       ...data,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.users.set(id, updated);
     return updated;
@@ -56,7 +87,7 @@ export class InMemoryDatabase {
       ...data,
       id: crypto.randomUUID(),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     };
     this.journals.set(journal.id, journal);
     return journal;
@@ -83,7 +114,7 @@ export class InMemoryDatabase {
     const prompt: PromptTemplate = {
       ...data,
       id: crypto.randomUUID(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
     this.prompts.set(prompt.id, prompt);
     return prompt;
@@ -106,7 +137,7 @@ export class InMemoryDatabase {
       ...data,
       id: crypto.randomUUID(),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     };
     this.orders.set(order.id, order);
     return order;
@@ -128,7 +159,7 @@ export class InMemoryDatabase {
     const updated = {
       ...order,
       ...data,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.orders.set(id, updated);
     return updated;
@@ -139,7 +170,7 @@ export class InMemoryDatabase {
     const therapist: Therapist = {
       ...data,
       id: crypto.randomUUID(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
     this.therapists.set(therapist.id, therapist);
     return therapist;
@@ -169,5 +200,15 @@ export class InMemoryDatabase {
   }
 }
 
-// 单例实例
-export const db = new InMemoryDatabase();
+// 根据环境选择数据库实现
+function createDatabase(): InMemoryDatabase | PostgreSQLDatabase {
+  if (process.env.DATABASE_URL) {
+    console.log('Using PostgreSQL database');
+    return new PostgreSQLDatabase(process.env.DATABASE_URL);
+  }
+  console.log('Using InMemory database (set DATABASE_URL for PostgreSQL)');
+  return new InMemoryDatabase();
+}
+
+// 单例实例 - 所有模块通过此实例访问数据库
+export const db = createDatabase();

@@ -1,5 +1,8 @@
 ﻿<script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { getJournalHistory } from '../../services/api'
+import { getCurrentUserId } from '../../services/auth'
+import { isWeb } from '../../services/platform'
 
 interface HistoryItem {
   id: string
@@ -33,15 +36,23 @@ function formatTime(dateStr: string): string {
   return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
 }
 
-function loadHistory() {
+async function loadHistory() {
   loading.value = true
-  try {
-    const stored = uni.getStorageSync('journal_history')
-    if (stored) {
-      historyList.value = JSON.parse(stored)
+  if (isWeb()) {
+    try {
+      historyList.value = await getJournalHistory(getCurrentUserId() || '')
+    } catch {
+      historyList.value = []
     }
-  } catch {
-    historyList.value = []
+  } else {
+    try {
+      const stored = uni.getStorageSync('journal_history')
+      if (stored) {
+        historyList.value = JSON.parse(stored)
+      }
+    } catch {
+      historyList.value = []
+    }
   }
   loading.value = false
 }

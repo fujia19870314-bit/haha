@@ -50,6 +50,31 @@
   "mp-alipay": {},
   "mp-baidu": {},
   "mp-toutiao": {},
+  "h5": {
+    "title": "哀伤日记",
+    "router": {
+      "mode": "hash",
+      "base": "./"
+    },
+    "publicPath": "./",
+    "devServer": {
+      "port": 3001,
+      "proxy": {
+        "/api": {
+          "target": "http://localhost:3000",
+          "changeOrigin": true,
+          "pathRewrite": {
+            "^/api": "/api"
+          }
+        }
+      }
+    },
+    "optimization": {
+      "treeShaking": {
+        "enable": true
+      }
+    }
+  },
   "uniStatistics": {
     "enable": false
   },

@@ -1,13 +1,13 @@
 // 提交日记云函数
 
-import type { ApiResponse, JournalEntry } from '../types/database';
-import { db } from '../lib/database';
-import { CrisisDetector } from '../lib/crisis-detector';
-import { encryptToString } from '../lib/encryption';
-import { getSystemPrompt, PromptTemplate } from '../lib/system-prompt';
-import { QwenProvider } from '../lib/qwen-provider';
-import { AppError, createErrorResponse, logError } from '../lib/error-handler';
-import { validateJournalContent, filterAIResponse } from '../lib/content-filter';
+import type { ApiResponse, JournalEntry } from '../types/database.js';
+import { db } from '../lib/database.js';
+import { CrisisDetector } from '../lib/crisis-detector.js';
+import { encryptToString } from '../lib/encryption.js';
+import { getSystemPrompt, PromptTemplate } from '../lib/system-prompt.js';
+import { QwenProvider } from '../lib/qwen-provider.js';
+import { AppError, createErrorResponse, logError } from '../lib/error-handler.js';
+import { validateJournalContent, filterAIResponse } from '../lib/content-filter.js';
 
 export interface SubmitJournalRequest {
   userId: string;
@@ -30,16 +30,15 @@ export interface JournalResponse {
 
 export class SubmitJournalHandler {
   private crisisDetector: CrisisDetector;
-  private llmProvider: QwenProvider;
+  private llmProvider?: QwenProvider;
 
   constructor() {
     const apiKey = process.env.QWEN_API_KEY;
-    if (!apiKey) {
-      throw new Error('QWEN_API_KEY is required');
+    if (apiKey) {
+      this.llmProvider = new QwenProvider({ apiKey });
     }
-    this.llmProvider = new QwenProvider({ apiKey });
     // 启用 LLM 危机检测（双模式）
-    this.crisisDetector = new CrisisDetector(true);
+    this.crisisDetector = new CrisisDetector(!!this.llmProvider);
   }
 
   /**
@@ -150,6 +149,9 @@ export class SubmitJournalHandler {
     content: string,
     fallbackMood?: string
   ): Promise<string> {
+    if (!this.llmProvider) {
+      return fallbackMood || '平静';
+    }
     try {
       const systemPrompt = getSystemPrompt(PromptTemplate.EMOTION_ANALYSIS);
       const response = await this.llmProvider.chat({
@@ -199,6 +201,13 @@ export class SubmitJournalHandler {
       }
 
       // 正常情况调用 LLM
+      if (!this.llmProvider) {
+        return {
+          content: '谢谢你愿意分享这些。你的感受很重要。',
+          model: 'fallback',
+          provider: 'system'
+        };
+      }
       const systemPrompt = getSystemPrompt(PromptTemplate.DIARY_RESPONSE);
       const response = await this.llmProvider.chat({
         messages: [

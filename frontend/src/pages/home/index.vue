@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import NavBar from '../../components/NavBar.vue'
-
-interface DailyPrompt {
-  prompt: string
-  theme: string
-}
+import { getDailyPrompt } from '../../services/api'
 
 interface OnboardingData {
   relationship: string
@@ -13,7 +9,7 @@ interface OnboardingData {
   completedAt: string
 }
 
-const prompt = ref<DailyPrompt | null>(null)
+const prompt = ref<{ prompt: string; theme: string } | null>(null)
 const onboardingData = ref<OnboardingData | null>(null)
 const showCrisisBanner = ref(true)
 const loading = ref(true)
@@ -38,13 +34,7 @@ function calculateDays(): number {
 
 async function fetchDailyPrompt() {
   try {
-    const res = await uni.request({
-      url: '/api/get-daily-prompt',
-      method: 'GET'
-    }) as any
-    if (res.data?.success && res.data.data) {
-      prompt.value = res.data.data
-    }
+    prompt.value = await getDailyPrompt()
   } catch {
     // fallback handled below
   } finally {

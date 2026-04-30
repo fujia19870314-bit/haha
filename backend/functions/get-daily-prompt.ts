@@ -1,7 +1,7 @@
 // 获取每日反思提示云函数
 
-import type { ApiResponse, PromptTemplate, GriefStage } from '../types/database';
-import { db } from '../lib/database';
+import type { ApiResponse, PromptTemplate, GriefStage } from '../types/database.js';
+import { db } from '../lib/database.js';
 
 export interface GetDailyPromptRequest {
   userId: string;

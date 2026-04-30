@@ -4,15 +4,31 @@
   "description": "AI 哀伤引导日记 - 后端",
   "type": "module",
   "scripts": {
+    "start": "node backend/dist/server/index.js",
+    "dev": "tsc --watch & node --watch backend/dist/server/index.js",
+    "build": "tsc -p backend/tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.0.0",
+    "@types/pg": "^8.20.0",
     "@vitest/coverage-v8": "^1.0.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { submitJournal } from '../../services/api'
+import { getCurrentUserId } from '../../services/auth'
 
 interface MoodTag {
   name: string
@@ -53,7 +54,7 @@ async function handleSubmit() {
 
   try {
     const result = await submitJournal({
-      userId: '', // 从 storage 获取
+      userId: getCurrentUserId() || '',
       mood: selectedMood.value,
       content: content.value.trim()
     })

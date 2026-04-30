@@ -30,6 +30,9 @@ export class WechatAPI {
     if (!code) {
       throw new Error('code is required');
     }
+    if (!this.appId || !this.appSecret) {
+      throw new Error('WeChat appId and appSecret are not configured');
+    }
 
     const url = `${this.baseUrl}/sns/jscode2session` +
       `?appid=${this.appId}` +
@@ -90,16 +93,12 @@ export class WechatAPI {
   }
 }
 
-function getRequiredEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Environment variable ${name} is required`);
-  }
-  return value;
+function getEnvOrEmpty(name: string): string {
+  return process.env[name] || '';
 }
 
-// 默认实例（使用环境变量，无回退值）
+// 默认实例（懒加载环境变量，避免启动时崩溃）
 export const wechatAPI = new WechatAPI(
-  getRequiredEnv('WECHAT_APP_ID'),
-  getRequiredEnv('WECHAT_APP_SECRET')
+  getEnvOrEmpty('WECHAT_APP_ID'),
+  getEnvOrEmpty('WECHAT_APP_SECRET')
 );

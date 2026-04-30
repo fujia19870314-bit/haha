@@ -1,6 +1,6 @@
 // 通义千问 LLM 提供商实现
 
-import type { LLMProvider, LLMRequest, LLMResponse } from '../types/llm';
+import type { LLMProvider, LLMRequest, LLMResponse } from '../types/llm.js';
 
 export interface QwenConfig {
   apiKey: string;

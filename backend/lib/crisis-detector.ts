@@ -1,9 +1,9 @@
 // 危机检测模块 - 支持关键词匹配 + LLM 双模式
 
-import type { CrisisDetectionResult } from '../types/llm';
-import { getSystemPrompt, PromptTemplate } from './system-prompt';
-import { QwenProvider } from './qwen-provider';
-import { logError } from './error-handler';
+import type { CrisisDetectionResult } from '../types/llm.js';
+import { getSystemPrompt, PromptTemplate } from './system-prompt.js';
+import { QwenProvider } from './qwen-provider.js';
+import { logError } from './error-handler.js';
 
 // 危机关键词库 - 按风险等级分类
 const CRISIS_KEYWORDS = {

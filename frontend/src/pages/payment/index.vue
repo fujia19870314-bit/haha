@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { createWechatPayOrder } from '../../services/api'
+import { isWechatMP } from '../../services/platform'
 
 interface Benefit {
   icon: string
@@ -22,21 +24,17 @@ async function handlePay() {
   uni.showLoading({ title: '请求支付...' })
 
   try {
-    const orderRes = await uni.request({
-      url: '/api/wechat-pay',
-      method: 'POST',
-      data: { amount: price.value }
-    }) as any
-
-    uni.hideLoading()
-
-    if (!orderRes.data?.success || !orderRes.data?.data) {
-      uni.showToast({ title: '创建订单失败', icon: 'none' })
+    if (!isWechatMP()) {
+      uni.hideLoading()
+      uni.showToast({ title: 'Web 端支付即将上线', icon: 'none' })
       isPaying.value = false
       return
     }
 
-    const payParams = orderRes.data.data
+    const payParams = await createWechatPayOrder(price.value)
+
+    uni.hideLoading()
+
     await uni.requestPayment({
       provider: 'wxpay',
       ...payParams

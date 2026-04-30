@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import { ref } from 'vue'
 import { generatePdf } from '../../services/api'
+import { getCurrentUserId } from '../../services/auth'
 
 const generating = ref(false)
 const result = ref<{
@@ -11,22 +12,9 @@ const result = ref<{
 } | null>(null)
 const error = ref('')
 
-const userId = ref('')
-
-function loadUserId() {
-  try {
-    const stored = uni.getStorageSync('user_info')
-    if (stored) {
-      const info = JSON.parse(stored)
-      userId.value = info.userId || ''
-    }
-  } catch {
-    userId.value = ''
-  }
-}
-
 async function handleGenerate() {
-  if (!userId.value) {
+  const userId = getCurrentUserId()
+  if (!userId) {
     error.value = '请先登录'
     return
   }
@@ -36,7 +24,7 @@ async function handleGenerate() {
   result.value = null
 
   try {
-    const data = await generatePdf(userId.value)
+    const data = await generatePdf(userId)
     result.value = data
   } catch (err) {
     error.value = err instanceof Error ? err.message : '生成失败'
@@ -53,8 +41,6 @@ function formatDate(iso: string): string {
 function handleBack() {
   uni.navigateBack()
 }
-
-loadUserId()
 </script>
 
 <template>
