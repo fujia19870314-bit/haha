@@ -115,7 +115,7 @@ export async function getJournalHistory(userId: string): Promise<JournalHistoryI
 }
 
 export async function webLogin(email: string, password: string): Promise<AuthResponse> {
-  const result = await httpRequest<AuthResponse>('/web-auth/login', 'POST', { email, password })
+  const result = await httpRequest<AuthResponse>('/auth/login', 'POST', { email, password })
   if (typeof window !== 'undefined') {
     localStorage.setItem('token', result.token)
     localStorage.setItem('userId', result.userId)
@@ -124,7 +124,7 @@ export async function webLogin(email: string, password: string): Promise<AuthRes
 }
 
 export async function webRegister(email: string, password: string): Promise<AuthResponse> {
-  const result = await httpRequest<AuthResponse>('/web-auth/register', 'POST', { email, password })
+  const result = await httpRequest<AuthResponse>('/auth/register', 'POST', { email, password })
   if (typeof window !== 'undefined') {
     localStorage.setItem('token', result.token)
     localStorage.setItem('userId', result.userId)

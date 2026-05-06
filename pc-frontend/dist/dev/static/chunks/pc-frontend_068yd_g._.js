@@ -72,7 +72,7 @@ async function getJournalHistory(userId) {
     return httpRequest(`/journal-history?userId=${userId}`, 'GET');
 }
 async function webLogin(email, password) {
-    const result = await httpRequest('/web-auth/login', 'POST', {
+    const result = await httpRequest('/auth/login', 'POST', {
         email,
         password
     });
@@ -83,7 +83,7 @@ async function webLogin(email, password) {
     return result;
 }
 async function webRegister(email, password) {
-    const result = await httpRequest('/web-auth/register', 'POST', {
+    const result = await httpRequest('/auth/register', 'POST', {
         email,
         password
     });

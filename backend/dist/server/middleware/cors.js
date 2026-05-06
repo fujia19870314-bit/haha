@@ -3,6 +3,8 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
     'https://mourning-diary.com',
     'https://www.mourning-diary.com',
     'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
     'http://localhost:5173'
 ];
 export const corsMiddleware = cors({
