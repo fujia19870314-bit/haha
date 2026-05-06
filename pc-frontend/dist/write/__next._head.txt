@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[69799,["/_next/static/chunks/08rsq29.sqvqv.js","/_next/static/chunks/0z162c2c70j_l.js"],"ViewportBoundary"]
-3:I[69799,["/_next/static/chunks/08rsq29.sqvqv.js","/_next/static/chunks/0z162c2c70j_l.js"],"MetadataBoundary"]
-4:"$Sreact.suspense"
-5:I[7675,["/_next/static/chunks/08rsq29.sqvqv.js","/_next/static/chunks/0z162c2c70j_l.js"],"IconMark"]
-0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"哀伤日记 - AI 哀伤引导"}],["$","meta","1",{"name":"description","content":"一个温暖、私密的空间，用 AI 引导你书写哀伤，陪伴你走过失去"}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.0x3dzn~oxb6tn.ico","sizes":"256x256","type":"image/x-icon"}],["$","$L5","3",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"a_7bieg6C_6d9g-qncqnC"}
