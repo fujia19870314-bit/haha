@@ -14,3 +14,5 @@ frontend/dist/
 # Temporary files
 tmp/
 
+pc-frontend/dist/
+pc-frontend/*.png

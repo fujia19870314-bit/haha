@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* ===== 温暖纸质感配色 ===== */
+  --color-bg: #F5F0EB;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFCF8;
+  --color-surface-warm: #FAF6F1;
+  --color-surface-muted: #F2EFEA;
+
+  /* 文字色 */
+  --color-text-primary: #2C2420;
+  --color-text-secondary: #6B6560;
+  --color-text-tertiary: #9E9A93;
+  --color-text-muted: #B5ADA5;
+  --color-text-on-primary: #FFFFFF;
+
+  /* 主色 - 墨绿 */
+  --color-primary: #4A6352;
+  --color-primary-light: #E8EDE9;
+  --color-primary-soft: #D4E0D6;
+  --color-primary-dark: #3A4F40;
+
+  /* 强调色 */
+  --color-accent: #4A6352;
+  --color-accent-light: #E8EDE9;
+
+  /* 暖色点缀 */
+  --color-warm: #B5A89A;
+  --color-warm-light: #F0EAE3;
+  --color-gold: #C4A882;
+
+  /* 危机色 */
+  --color-danger: #C45B4A;
+  --color-crisis: #C45B4A;
+  --color-crisis-light: #FCEAE8;
+  --color-crisis-soft: #FDF6F0;
+
+  /* 边框 */
+  --color-border: #EBE7E2;
+  --color-border-light: #F2EFEA;
+  --color-border-focus: #4A6352;
+
+  /* 字体 */
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 4px rgba(44, 36, 32, 0.05);
+  --shadow-md: 0 4px 20px rgba(44, 36, 32, 0.08);
+  --shadow-lg: 0 8px 32px rgba(44, 36, 32, 0.1);
+
+  /* 动画时间 */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  background-color: #F5F0EB;
+  color: #2C2420;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s var(--ease-out) forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s var(--ease-out) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s var(--ease-out) forwards;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F0EB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4D0CB;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B5ADA5;
+}
+
+/* 文本域 */
+textarea:focus {
+  outline: none;
+  border-color: #4A6352;
+}
+
+/* 输入框 */
+input:focus {
+  outline: none;
+  border-color: #4A6352;
+}
